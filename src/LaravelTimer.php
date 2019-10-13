@@ -75,7 +75,7 @@ class LaravelTimer
     {
         $executionTime  = $this->stop($name)['time'];
 
-        $message = $this->getRequestSignature() . ' ' . microtime(true) . ' ' . $name . ' Execution Time(sec):' . $executionTime;
+        $message = $this->getRequestSignature() . ' ' . microtime(true) . ' ' . $name . ' ExecutionTime(sec):' . $executionTime;
 
 
         Log::info($message);
