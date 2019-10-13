@@ -83,8 +83,8 @@ class LaravelTimer
 
     public function getRequestSignature()
     {
-        $str = $_SERVER['HTTP_USER_AGENT'] ?? '', \Request::ip(), \Request::route()->uri(), \Request::all();
-        $signature = hash_hmac('sha256', $str);
+        $str = $_SERVER['HTTP_USER_AGENT'] ?? '' . \Request::ip() . \Request::route()->uri() . \Request::all();
+        $signature = hash_hmac('sha256', $str, config('app.key'));
 
         return $signature;
     }

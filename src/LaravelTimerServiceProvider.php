@@ -23,17 +23,9 @@ class LaravelTimerServiceProvider extends ServiceProvider
      */
     public function register()
     {
-        $laravel = app();
-        $explodedVersion = explode('.', $laravel::VERSION);
-        if ($explodedVersion[0] >= 5 && $explodedVersion[1] >= 4) {
-            $this->app->singleton('timer', function ($app) {
-                return new LaravelTimer();
-            });
-        } else {
-            $this->app['timer'] = $this->app->share(function($app) {
-                return new LaravelTimer();
-            });
-        }
+        $this->app->singleton('timer', function ($app) {
+            return new LaravelTimer();
+        });
 
         $this->app->alias('timer', 'Astatroth\LaravelTimer\LaravelTimer');
     }
