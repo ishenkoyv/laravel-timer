@@ -2,6 +2,9 @@
 
 namespace Astatroth\LaravelTimer;
 
+use Log;
+use Request;
+
 class LaravelTimer
 {
 
@@ -12,7 +15,7 @@ class LaravelTimer
      *
      * @param $name
      */
-    public function timerStart($name)
+    public function start($name)
     {
         $this->timers[$name]['start'] = microtime(true);
         $this->timers[$name]['count'] = isset($this->timers[$name]['count']) ? ++$this->timers[$name]['count'] : 1;
@@ -24,7 +27,7 @@ class LaravelTimer
      * @param $name
      * @return float
      */
-    public function timerRead($name)
+    public function read($name)
     {
         if (isset($this->timers[$name]['start'])) {
             $stop = microtime(true);
@@ -40,7 +43,7 @@ class LaravelTimer
         return $this->timers[$name]['time'];
     }
 
-    public function timerStop($name)
+    public function stop($name)
     {
         if (isset($this->timers[$name]['start'])) {
             $stop = microtime(true);
@@ -58,4 +61,31 @@ class LaravelTimer
         return $this->timers[$name];
     }
 
+    public function startAndLog($name, $includeRequestSignature = true)
+    {
+        $executionTime  = $this->stop($name);
+
+        $message = $this->getRequestSignature() . ' ' . microtime(true) . ' ' . $name . ' Started' . $executionTime;
+
+
+        Log::info($message);
+    }
+
+    public function stopAndLog($name, $includeRequestSignature = true)
+    {
+        $executionTime  = $this->stop($name);
+
+        $message = $this->getRequestSignature() . ' ' . microtime(true) . ' ' . $name . ' Execution Time(sec):' . $executionTime;
+
+
+        Log::info($message);
+    }
+
+    public function getRequestSignature()
+    {
+        $str = $_SERVER['HTTP_USER_AGENT'] ?? '', \Request::ip(), \Request::route()->uri(), \Request::all();
+        $signature = hash_hmac('sha256', $str);
+
+        return $signature;
+    }
 }
