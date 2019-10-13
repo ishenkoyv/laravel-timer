@@ -63,7 +63,7 @@ class LaravelTimer
 
     public function startAndLog($name, $includeRequestSignature = true)
     {
-        $executionTime  = $this->stop($name);
+        $executionTime  = $this->start($name);
 
         $message = $this->getRequestSignature() . ' ' . microtime(true) . ' ' . $name . ' Started' . $executionTime;
 
